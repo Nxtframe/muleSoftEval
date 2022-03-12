@@ -19,10 +19,11 @@ public class Connect {
         Statement stmt = null;
         // Create the variables 
         int a,b,res,movieid, result,year,rating;
-        String moviename,actor,actress,director;
+        String moviename,actor,actress,director,querystring;
         char choice  ;
         char ch;
         Scanner dbChoiceObj = new Scanner(System.in);
+        Scanner dbQueryObj = new Scanner(System.in);
         Scanner dbScannerObj = new Scanner(System.in);
         Scanner dbScannerInsertObj = new Scanner(System.in);
             System.out.println("Enter Database Name");
@@ -93,20 +94,41 @@ public class Connect {
                         System.out.println("\n");
                         System.out.println("Inserting into DB");
                         
-                        result = stmt.executeUpdate(sqlInsert);
+                        result = pstmt.executeUpdate();
                         System.out.println("Sucessfully Inserted Data in Movies Database");
                         break;
                         case '3': //Query Table
-                        String sqlquery = "SELECT * FROM MOVIES";
+                        String sqlquery = "SELECT id,movieNAME,Actor,Actress,DIRECTOR,YEAR,YEAR,RATING FROM MOVIES";
                         ResultSet resultquery = stmt.executeQuery(sqlquery);
-                        System.out.println(resultquery.getInt("id") + "\t"+ resultquery.getString("movieNAME") + "\t"+
+                        while(resultquery.next()){
+                            System.out.println(resultquery.getInt("id") + "\t"+ resultquery.getString("movieNAME") + "\t"+
                         resultquery.getString("Actor") + "\t" + resultquery.getString("Actress") + "\t" + resultquery.getString("DIRECTOR") + "\t" +
-                        resultquery.getInt("YEAR") + "\t" + resultquery.getInt("RATING")
+                        resultquery.getInt("YEAR") + "\t" + resultquery.getInt("RATING") + "\n"
                         );
+                        }
+                        
+                        break;
+                        case '4': //Selection Query
+                       
+                        System.out.println("Please Insert a Column to Query");
+                        querystring = dbQueryObj.nextLine();
+                        String sqlqueryone = "SELECT "+querystring+" FROM MOVIES";
+                        ResultSet resultqueryone = stmt.executeQuery(sqlqueryone);
+                        while(resultqueryone.next()){
+                            {
+                                if(resultqueryone.getString(querystring) != null){
+                                    System.out.println(resultqueryone.getString(querystring));
+                                }else{
+                                    System.out.println(resultqueryone.getInt(querystring));
+                                };
+                            };
+                        }
+                        break;
+                        case '5':
+                        break;
                         default:
                         System.out.println("Enter your choice!");
                         break;
-                        
                     }
                    
                 }  while( choice != 5);
